@@ -21,6 +21,7 @@ export function downloadRender(center : {x:number, y:number}, xMin : number, xMa
     let interval = setInterval(() => {
         if (workerManager.isComplete()) {
             clearInterval(interval);
+            workerManager.destroy();
             let imgData = canvas.toDataURL('image/png');
             imgData = imgData.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
             imgData = imgData.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=mandelbrot.png');

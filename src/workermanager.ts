@@ -77,4 +77,10 @@ export class WorkerManager {
         }
         return true;
     }
+
+    public destroy() {
+        for (let i = 0; i < this.stripes; i++) {
+            this.workers[i].terminate();
+        }
+    }
 }
