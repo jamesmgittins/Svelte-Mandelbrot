@@ -7,6 +7,8 @@ export class WorkerManager {
     private canvasHeight: number;
 
     private stripeData: any[] = [];
+    private workerQueue : any[] = [];
+    private workerProcessing = [];
     private animationFrame: number;
 
     constructor(canvas: HTMLCanvasElement, stripes: number) {
@@ -29,6 +31,8 @@ export class WorkerManager {
         if (this.animationFrame)
             cancelAnimationFrame(this.animationFrame);
         this.animationFrame = requestAnimationFrame(() => this.draw());
+        this.workerProcessing[msg.data.stripe] = false;
+        this.processQueue(msg.data.stripe);
     }
 
     private draw() {
@@ -44,7 +48,7 @@ export class WorkerManager {
         let viewSection = viewWidth / this.stripes;
 
         for (let i = 0; i < this.stripes; i++) {
-            this.workers[i].postMessage({
+            this.workerQueue[i] = {
                 width: this.stripeWidth,
                 height: this.canvasHeight,
                 xmin: xMin + (i * viewSection),
@@ -53,7 +57,16 @@ export class WorkerManager {
                 ymax: yMax,
                 iterations: iterations,
                 stripe: i
-            });
+            };
+            this.processQueue(i);
+        }
+    }
+
+    public processQueue(i : number) {
+        if (!this.workerProcessing[i] && this.workerQueue[i]) {
+            this.workers[i].postMessage(this.workerQueue[i]);
+            this.workerQueue[i] = false;
+            this.workerProcessing[i] = true;
         }
     }
 }

@@ -71,6 +71,7 @@
         margin: auto;
         display: block;
         max-width: 100%;
+        min-width: 60%;
     }
 
     div {
