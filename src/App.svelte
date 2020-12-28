@@ -13,8 +13,6 @@
 
     let canvasWidth = 900;
     let canvasHeight = canvasWidth / 1.5;
-    let canvasHalfWidth = canvasWidth / 2;
-    let canvasHalfHeight = canvasHeight / 2;
 
     function drawMandelbrot() {
         workerManager.drawMandelbrot(xMin, xMax, yMin, yMax, iterations);
@@ -28,8 +26,8 @@
     });
 
     function reCenter(e: MouseEvent) {
-        let xChange = (e.offsetX - canvasHalfWidth) / canvas.width;
-        let yChange = (e.offsetY - canvasHalfHeight) / canvas.height;
+        let xChange = (e.offsetX - canvas.clientWidth / 2) / canvas.clientWidth;
+        let yChange = (e.offsetY - canvas.clientHeight / 2) / canvas.clientHeight;
         let width = Math.abs(xMax - xMin);
         let height = Math.abs(yMax - yMin);
         xMin += xChange * width;
