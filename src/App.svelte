@@ -1,14 +1,14 @@
 <script lang="ts">
-import { onMount } from 'svelte';
-import { WorkerManager } from './workermanager';
+    import { onMount } from "svelte";
+    import { WorkerManager } from "./workermanager";
 
-    let canvas : HTMLCanvasElement;
-    let workerManager : WorkerManager;
+    let canvas: HTMLCanvasElement;
+    let workerManager: WorkerManager;
     let xMin = -2;
     let xMax = 1;
     let yMin = -1;
     let yMax = 1;
-    let center = {x : (xMax + xMin) / 2, y : (yMax + yMin) / 2};
+    let center = { x: (xMax + xMin) / 2, y: (yMax + yMin) / 2 };
     let iterations = 500;
 
     let canvasWidth = 900;
@@ -24,56 +24,54 @@ import { WorkerManager } from './workermanager';
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
         workerManager = new WorkerManager(canvas, 10);
-        drawMandelbrot()
+        drawMandelbrot();
     });
 
-    function reCenter(e : MouseEvent) {
+    function reCenter(e: MouseEvent) {
         let xChange = (e.offsetX - canvasHalfWidth) / canvas.width;
         let yChange = (e.offsetY - canvasHalfHeight) / canvas.height;
         let width = Math.abs(xMax - xMin);
         let height = Math.abs(yMax - yMin);
-        xMin += (xChange * width);
-        xMax += (xChange * width);
-        yMin += (yChange * height);
-        yMax += (yChange * height);
-        center = {x : (xMax + xMin) / 2, y : (yMax + yMin) / 2};
+        xMin += xChange * width;
+        xMax += xChange * width;
+        yMin += yChange * height;
+        yMax += yChange * height;
+        center = { x: (xMax + xMin) / 2, y: (yMax + yMin) / 2 };
         drawMandelbrot();
     }
 
-    function zoom(isIn : boolean) {
+    function zoom(isIn: boolean) {
         let multi = isIn ? 0.9 : 1.1;
         let width = Math.abs(xMax - xMin) / 2;
         let height = Math.abs(yMax - yMin) / 2;
-        xMin = center.x - (width * multi);
-        xMax = center.x + (width * multi);
-        yMin = center.y - (height * multi);
-        yMax = center.y + (height * multi);
+        xMin = center.x - width * multi;
+        xMax = center.x + width * multi;
+        yMin = center.y - height * multi;
+        yMax = center.y + height * multi;
         drawMandelbrot();
     }
 </script>
 
 <div>
     <label for="iterations">Iterations</label>
-    <input type="number" name="iterations" bind:value={iterations}/>
+    <input type="number" name="iterations" bind:value={iterations} />
     <button on:click={drawMandelbrot}>Redraw</button>
 </div>
 
 <div>
-    <button on:click={e => zoom(false)}>Zoom -</button>
-    <button on:click={e => zoom(true)}>Zoom +</button>
+    <button on:click={(e) => zoom(false)}>Zoom -</button>
+    <button on:click={(e) => zoom(true)}>Zoom +</button>
 </div>
 
-<canvas bind:this={canvas} on:click={e => reCenter(e)}></canvas>
-
+<canvas bind:this={canvas} on:click={(e) => reCenter(e)} />
 
 <style>
-
     :global(body) {
-		font-family: sans-serif;
-	}
+        font-family: sans-serif;
+    }
     canvas {
-        margin:auto;
-        display:block;
+        margin: auto;
+        display: block;
         max-width: 100%;
     }
 
@@ -83,8 +81,8 @@ import { WorkerManager } from './workermanager';
     }
 
     button {
-        padding:1em;
-        border:none;
+        padding: 1em;
+        border: none;
         border-radius: 0.5em;
         cursor: pointer;
     }

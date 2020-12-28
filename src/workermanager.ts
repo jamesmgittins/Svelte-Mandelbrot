@@ -1,15 +1,16 @@
 export class WorkerManager {
-    private ctx : CanvasRenderingContext2D;
-    private stripes : number;
-    private workers : Worker[];
+    private ctx: CanvasRenderingContext2D;
+    private stripes: number;
+    private workers: Worker[];
 
-    private stripeWidth : number;
-    private canvasHeight : number;
+    private stripeWidth: number;
+    private canvasHeight: number;
 
-    private stripeData : any[] = [];
+    private stripeData: any[] = [];
+    private animationFrame: number;
 
-    constructor(canvas : HTMLCanvasElement, stripes : number) {
-        
+    constructor(canvas: HTMLCanvasElement, stripes: number) {
+
         this.ctx = canvas.getContext('2d');
         this.canvasHeight = canvas.height;
         this.stripeWidth = canvas.width / stripes;
@@ -23,9 +24,11 @@ export class WorkerManager {
         }
     }
 
-    private processMessage(msg : {data : {stripe : number, data : []}}) {
+    private processMessage(msg: { data: { stripe: number, data: [] } }) {
         this.stripeData[msg.data.stripe] = msg.data.data;
-        requestAnimationFrame(() => this.draw());
+        if (this.animationFrame)
+            cancelAnimationFrame(this.animationFrame);
+        this.animationFrame = requestAnimationFrame(() => this.draw());
     }
 
     private draw() {
@@ -35,21 +38,21 @@ export class WorkerManager {
         }
     }
 
-    public drawMandelbrot(xMin : number, xMax : number, yMin : number, yMax : number, iterations : number) : void {
-        
+    public drawMandelbrot(xMin: number, xMax: number, yMin: number, yMax: number, iterations: number): void {
+
         let viewWidth = Math.abs(xMax - xMin);
         let viewSection = viewWidth / this.stripes;
 
         for (let i = 0; i < this.stripes; i++) {
             this.workers[i].postMessage({
-                width : this.stripeWidth,
-                height : this.canvasHeight,
-                xmin : xMin + (i * viewSection),
-                xmax : xMin + ((i + 1) * viewSection),
-                ymin : yMin,
-                ymax : yMax,
-                iterations : iterations,
-                stripe : i
+                width: this.stripeWidth,
+                height: this.canvasHeight,
+                xmin: xMin + (i * viewSection),
+                xmax: xMin + ((i + 1) * viewSection),
+                ymin: yMin,
+                ymax: yMax,
+                iterations: iterations,
+                stripe: i
             });
         }
     }
