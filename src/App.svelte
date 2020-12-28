@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { downloadRender, resolutionOptions } from "./downloader";
     import { WorkerManager } from "./workermanager";
 
     let canvas: HTMLCanvasElement;
@@ -10,7 +11,7 @@
     let yMax = 1;
     let center = { x: (xMax + xMin) / 2, y: (yMax + yMin) / 2 };
     let iterations = 500;
-
+    let resolution : string = '1920x1080';
     let canvasWidth = 900;
     let canvasHeight = canvasWidth / 1.5;
 
@@ -48,12 +49,25 @@
         yMax = center.y + height * multi;
         drawMandelbrot();
     }
+
+    function download() {
+        downloadRender(center, xMin, xMax, iterations, resolution);
+    }
 </script>
 
 <div>
     <label for="iterations">Iterations</label>
     <input type="number" name="iterations" bind:value={iterations} />
     <button on:click={drawMandelbrot}>Redraw</button>
+    <span class="divider"></span>
+    <select bind:value={resolution}>
+        {#each resolutionOptions as option}
+			<option value={option}>
+				{option}
+			</option>
+		{/each}
+    </select>
+    <button on:click={download}>Download</button>
 </div>
 
 <div>
@@ -88,5 +102,15 @@
 
     button:hover {
         background-color: rgb(209, 255, 139);
+    }
+
+    span.divider {
+        width: 2px;
+        height: 2em;
+        background-color: #ddd;
+        border-radius: 5px;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 0.5em;
     }
 </style>

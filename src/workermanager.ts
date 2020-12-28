@@ -69,4 +69,12 @@ export class WorkerManager {
             this.workerProcessing[i] = true;
         }
     }
+
+    public isComplete() : boolean {
+        for (let i = 0; i < this.stripes; i++) {
+            if (this.workerProcessing[i])
+                return false;
+        }
+        return true;
+    }
 }
