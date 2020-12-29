@@ -3,6 +3,7 @@
     import { downloadRender, resolutionOptions } from "./downloader";
     import { WorkerManager } from "./workermanager";
 
+    let colors = ['#000000','#6200FF','#FFE100','#FF0000'];
     let canvas: HTMLCanvasElement;
     let workerManager: WorkerManager;
     let xMin = -2;
@@ -16,6 +17,7 @@
     let canvasHeight = canvasWidth / 1.5;
 
     function drawMandelbrot() {
+        workerManager.setColors(colors);
         workerManager.drawMandelbrot(xMin, xMax, yMin, yMax, iterations);
     }
 
@@ -51,14 +53,20 @@
     }
 
     function download() {
-        downloadRender(center, xMin, xMax, iterations, resolution);
+        downloadRender(center, xMin, xMax, iterations, resolution, colors);
     }
 </script>
 
 <div>
+    <label for="colors">Colors</label>
+    {#each colors as color}
+        <input type="color" bind:value={color} on:change={drawMandelbrot}/>
+    {/each}
+</div>
+
+<div>
     <label for="iterations">Iterations</label>
-    <input type="number" name="iterations" bind:value={iterations} />
-    <button on:click={drawMandelbrot}>Redraw</button>
+    <input type="number" name="iterations" bind:value={iterations} on:change={drawMandelbrot}/>
     <span class="divider"></span>
     <select bind:value={resolution}>
         {#each resolutionOptions as option}
@@ -71,6 +79,7 @@
 </div>
 
 <div>
+    <span>Click image to re-center</span>
     <button on:click={(e) => zoom(false)}>Zoom -</button>
     <button on:click={(e) => zoom(true)}>Zoom +</button>
 </div>

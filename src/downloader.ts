@@ -3,7 +3,7 @@ import { WorkerManager } from "./workermanager";
 export const resolutionOptions = ['1280x720','1600x900','1920x1080','2560x1440','3200x1800','3840x2160','5120x2880','7860x4320'];
 
 
-export function downloadRender(center : {x:number, y:number}, xMin : number, xMax:number, iterations:number, resolution : string) {
+export function downloadRender(center : {x:number, y:number}, xMin : number, xMax:number, iterations:number, resolution : string, colors : string[]) {
     let width = parseInt(resolution.split('x')[0]);
     let height = parseInt(resolution.split('x')[1]);
     let ratio = width / height;
@@ -16,6 +16,7 @@ export function downloadRender(center : {x:number, y:number}, xMin : number, xMa
     let yMax = center.y + viewHeight;
 
     let workerManager = new WorkerManager(canvas, 10);
+    workerManager.setColors(colors);
     workerManager.drawMandelbrot(xMin, xMax, yMin, yMax, iterations);
 
     let interval = setInterval(() => {

@@ -11,6 +11,8 @@ export class WorkerManager {
     private workerProcessing = [];
     private animationFrame: number;
 
+    private colors : string[];
+
     constructor(canvas: HTMLCanvasElement, stripes: number) {
 
         this.ctx = canvas.getContext('2d');
@@ -56,7 +58,8 @@ export class WorkerManager {
                 ymin: yMin,
                 ymax: yMax,
                 iterations: iterations,
-                stripe: i
+                stripe: i,
+                colors : this.colors
             };
             this.processQueue(i);
         }
@@ -82,5 +85,9 @@ export class WorkerManager {
         for (let i = 0; i < this.stripes; i++) {
             this.workers[i].terminate();
         }
+    }
+
+    public setColors(colors : string[]) {
+        this.colors = colors;
     }
 }
