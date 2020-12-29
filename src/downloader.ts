@@ -1,4 +1,7 @@
 import { WorkerManager } from "./workermanager";
+import { writable } from 'svelte/store';
+
+export const downloading = writable(false);
 
 export const resolutionOptions = ['1280x720','1600x900','1920x1080','2560x1440','3200x1800','3840x2160','5120x2880','7860x4320'];
 
@@ -32,6 +35,7 @@ export function downloadRender(center : {x:number, y:number}, xMin : number, xMa
             document.body.append(a);
             a.click();
             a.remove();
+            downloading.set(false);
         }
     }, 100);
 }

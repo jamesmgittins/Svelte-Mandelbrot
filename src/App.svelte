@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { downloadRender, resolutionOptions } from "./downloader";
+    import { downloadRender, resolutionOptions, downloading } from "./downloader";
     import { WorkerManager } from "./workermanager";
 
     let colors = ['#000000','#6200FF','#FFE100','#FF0000'];
@@ -53,6 +53,7 @@
     }
 
     function download() {
+        downloading.set(true);
         downloadRender(center, xMin, xMax, iterations, resolution, colors);
     }
 </script>
@@ -75,7 +76,13 @@
 			</option>
 		{/each}
     </select>
-    <button on:click={download}>Download</button>
+    {#if $downloading}
+        <button on:click={download} disabled>Download</button>
+        <span>Please wait...</span>
+    {:else}
+        <button on:click={download}>Download</button>
+    {/if}
+    
 </div>
 
 <div>
