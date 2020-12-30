@@ -37,5 +37,5 @@ export function downloadRender(center : {x:number, y:number}, xMin : number, xMa
             a.remove();
             downloading.set(false);
         }
-    }, 100);
+    }, 200);
 }
