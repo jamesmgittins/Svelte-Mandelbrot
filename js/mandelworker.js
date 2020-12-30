@@ -29,7 +29,7 @@ function mandelbrot(width, height, xmin, xmax, ymin, ymax, iterations, stripe) {
             var i = mandelIter(x, y, iterations);
             var ppos = width * iy + ix;
 
-            if (i > iterations) {
+            if (i > iterations || isNaN(i)) {
                 iters[ppos] = 3;
             } else {
                 var c = 3 * Math.log(i) / Math.log(iterations - 1.0);
